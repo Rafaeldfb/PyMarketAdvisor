@@ -7,6 +7,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from ..helpers import apology, login_required, lookup, usd
 from ..models.users_db import User
+from ..models.criptocoins_db import Coin, coinById, coinBySymbol, coinLogoBySymbol
 
 # index route:
 index_bp = Blueprint('index', __name__, template_folder='../templates', static_folder='../static')
@@ -15,6 +16,8 @@ index_bp = Blueprint('index', __name__, template_folder='../templates', static_f
 @index_bp.route('/', methods=['GET'])
 def indexView():
     """ View for index """
+    # Get message
+    message = get_flashed_messages()
     #  Ensure the user is logged in
     if session.get("user_id") is None:
         return render_template("login.html")
@@ -22,6 +25,8 @@ def indexView():
     else:
         # Get user's name:
         userID = session.get("user_id")
-        userName = User.query.filter_by(user_id=userID).first().user_name
+        userName = User("SELECT user_name FROM users WHERE user_id = :userID", userID=userID)[0]['user_name']
+        # make an object with coins to view
+        coins = Coin("SELECT * FROM coins")
         
-    return render_template("index.html", userName=userName)
+    return render_template("index.html", userName=userName, message=message, coins=coins)

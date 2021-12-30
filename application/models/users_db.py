@@ -1,21 +1,25 @@
 from flask import Blueprint
-from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from flask import current_app as app
+# from flask_sqlalchemy import SQLAlchemy
+from cs50 import SQL
+# from datetime import datetime
 from werkzeug.security import check_password_hash, generate_password_hash
 # from application import db
 
 # define user models
 users_bp = Blueprint('users_bp', __name__)
 
-db = SQLAlchemy()
+# db = SQLAlchemy()
+db = SQL("sqlite:///application/user_database.db")
 
-class User(db.Model):
-    """User Model"""
-    user_id = db.Column(db.Integer, primary_key=True)
-    user_name = db.Column(db.String(50), nullable=False)
-    user_hash = db.Column(db.String(50), nullable=False)
-    user_created = db.Column(db.DateTime, default=datetime.now)
-    user_updated = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
 
-    def __repr__(self):
-        return '<User %r>' % self.username
+def User(*args, **kwargs):
+    """return db.execute(query) from user badatabase, if User(None)'s query is None, return None"""
+    if len(args) > 0 and len(kwargs) > 0:
+        return db.execute(*args, **kwargs)
+
+    elif len(args) > 0 and len(kwargs) == 0:
+        return db.execute(*args)
+
+    else:
+        return None
