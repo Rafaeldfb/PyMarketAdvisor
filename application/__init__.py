@@ -31,7 +31,7 @@ def create_app():
             raise RuntimeError("IEX_API_KEY not set")
 
         # Include our Routes
-        from .views import index, register, login, logout, settings
+        from .views import index, register, login, logout, settings, newsView
         from .models import users_db, criptocoins_db, news
 
         # Register Blueprints
@@ -40,6 +40,7 @@ def create_app():
         app.register_blueprint(login.login_bp)
         app.register_blueprint(logout.logout_bp)
         app.register_blueprint(settings.settings_bp)
+        app.register_blueprint(newsView.newsView_bp)
 
         app.register_blueprint(users_db.users_bp)
         app.register_blueprint(criptocoins_db.criptocoins_bp)

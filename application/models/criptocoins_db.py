@@ -16,9 +16,9 @@ MARKET
     news (news_id, symbol, title, url, date, source),
     symbol#1 (symbol (id), value... date&time), symbol#2, symbol#3, symbol#4, symbol#5....
 '''
-def coinById(coin_id):
+def coinById(id):
     """return coin by id"""
-    return Coin("SELECT * FROM coins WHERE coin_id = ?", coin_id)
+    return Coin("SELECT * FROM coins WHERE id = ?", id)
 
 def coinBySymbol(symbol):
     """return coin by symbol"""

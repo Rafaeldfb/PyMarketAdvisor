@@ -2,7 +2,7 @@
 from os import environ, path
 from dotenv import load_dotenv
 
-basedir = path.abspath(path.dirname(__file__))
+basedir = path.abspath(path.dirname('./'))
 load_dotenv(path.join(basedir, '.env'))
 
 
@@ -10,6 +10,7 @@ class Config:
     """Base config."""
     # SECRET_KEY = environ.get('SECRET_KEY')
     IEX_API_KEY = environ.get('IEX_API_KEY')
+    NEWS_API_KEY = environ.get('NEWS_API_KEY')
     SESSION_TYPE = 'filesystem'
     SESSION_PERMANENT = False
     # SESSION_COOKIE_NAME = environ.get('SESSION_COOKIE_NAME')
