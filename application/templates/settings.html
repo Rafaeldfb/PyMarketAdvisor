@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+
+    
+{% block title %}
+    User Settings
+{% endblock %}
+
+{% block main %}
+    <div class="container-fluid">
+        <div class="row p-2 p-md-5">
+            <h1 class="col-12">Welcome to your settings, {{ userName }}!</h1>
+            <p class="col-12 fs-4">Here you can change your Username and Password.</p>
+        </div>
+
+        <div class="row border rounded bg-light shadow p-2 p-md-5 mt-0 mb-5 mx-2 mx-md-5">
+            <div class="col-12">
+                <form action="/settings" method="POST">
+                    <div class="form-group">
+                        <select id="selectUpdate" name="selectUpdate" class="custom-select custom-select-lg mb-3" onclick="settings()">
+                            <option selected>Choose what to update</option>
+                            <option value="changeName">User Name</option>
+                            <option value="changePwd">Password</option>
+                        </select>
+                    </div>
+
+                    <div id="nameBlock" class="form-group d-none row justify-content-around">
+                        <label for="username" class="col">Old username: <b>{{ userName }}</b></label>
+                        <input type="text" class="form-control col" id="username" name="username">
+                    </div>
+
+                    <div id="pwdBlock" class="d-none row justify-content-start py-2">
+                        <div class="form-group col-12">
+                            <label for="password" class="col-6">Password</label>
+                            <input type="password" class="form-control col-6" id="password" name="password">
+                        </div>
+
+                        <div class="form-group col-12">
+                            <label for="password2" class="col-6">Confirm Password</label>
+                            <input type="password" class="form-control col-6" id="password2" name="confirmation">
+                        </div>
+                    </div>
+                    <button type="submit" id="updateBtn" class="btn btn-primary m-3" disabled>Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="/static/settings.js"></script>
+    
+{% endblock %}
+
+
+

@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    HOME
+{% endblock %}
+
+
+{% block main %}
+    <div class="container-fluid p-0 p-xl-2">
+        <div class="row">
+
+            {% for coin in coins %}
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+                    <div class="card shadow bg-light">
+                        <div class="card-header">
+                            <div class="d-flex flex-row align-content-around">
+                                <img class="card-img-top rounded-circle shadow-sm w-25 h-auto me-auto" src="{{ coin.logo }}" alt="{{ coin.name }}">
+                                <h5 class="card-title mb-0 flex-fill m-auto">{{ coin.symbol }}</h5>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ coin.name }}</h5>
+                            <p class="card-text">{{ coin.symbol }}</p>
+                            <a href="/news/{{ coin.symbol }}" class="btn btn-success">View</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            
+        </div>
+    </div>
+{% endblock %}
