@@ -2,6 +2,7 @@ import os
 from flask import Blueprint
 # from flask import current_app as app
 from cs50 import SQL
+import sqlite3
 from .criptocoins_db import Coin
 from urllib.request import Request, urlopen
 # from bs4 import BeautifulSoup
@@ -31,11 +32,13 @@ def rawSearch():
 
     today = date.today()
     yesterday = today - timedelta(days=1)
+
     results = []
     raw_results = {}
     for coin in coins:
+        queryToSearch = 'news for ' + coin['name'] + ' ' + coin['symbol']
         result = newsapi.get_everything(
-            q=coin['symbol']+coin['name'],
+            q=queryToSearch,
             from_param=yesterday,
             to=today,
             language='en',
@@ -46,38 +49,49 @@ def rawSearch():
         raw_results[coin['symbol']] = results
     return raw_results
 
-
 def newsBySymbol(symbol):
-    news = []
-    for i in rawSearch()[symbol]:
-        for j in i['articles']:
-            news.append(j)
-    return news
+    # insertNews()
+    update = Coin("SELECT * FROM news WHERE news_symbol = ? ORDER BY news_update DESC LIMIT 1", symbol)
+    
+    updateDate = date.fromisoformat(update[0]['news_update']) if (len(update) >= 1) else (date.today() - timedelta(days=2))
+    timeLapse = date.today() - updateDate
+    
+    if timeLapse > timedelta(days=1):
+        insertNewNews()
+        newsBySymbol(symbol)
+    else:
+        news = Coin("SELECT * FROM news WHERE news_symbol = ? ORDER BY news_update DESC", symbol)
+        return news
 
-
-
-
-
-# # /v2/top-headlines
-# top_headlines = newsapi.get_top_headlines(
-#     q='bitcoin',
-#     sources='bbc-news,the-verge',
-#     category='business',
-#     language='en',
-#     country='us'
-# )
-
-# # /v2/everything
-# all_articles = newsapi.get_everything(
-#     q='bitcoin',
-#     sources='bbc-news,the-verge',
-#     domains='bbc.co.uk,techcrunch.com',
-#     from_param='2017-12-01',
-#     to='2017-12-12',
-#     language='en',
-#     sort_by='relevancy',
-#     page=2
-# )
-
-# # /v2/top-headlines/sources
-# sources = newsapi.get_sources()
+# send news to database
+def insertNewNews():
+    rawDict = rawSearch()
+    for coin in rawDict:
+        results = rawDict[coin]
+        # print(results)
+        for result in results:
+            print(coin)
+            articles = result['articles']
+            totalResults = result['totalResults']
+            status = result['status']
+            if status == 'ok' and totalResults > 0:
+                for article in articles:
+                    title = article['title'] if article['title'] != None else "None"
+                    description = article['description'] if article['description'] != None else "None"
+                    content = article['content'] if article['content'] != None else "None"
+                    url = article['url'] if article['url'] != None else "None"
+                    publishedAt = article['publishedAt'] if article['publishedAt'] != None else "None"
+                    urlToImage = article['urlToImage'] if article['urlToImage'] != None else "None"
+                    author = article['author'] if article['author'] != None else "None"
+                    Coin("INSERT INTO news (news_symbol, news_header, news_desc, news_content, news_link, news_date, news_img, news_author, news_update) "
+                        + "VALUES (:news_symbol, :news_header, :news_desc, :news_content, :news_link, :news_date, :news_img, :news_author, :news_update)",
+                        news_symbol=coin,
+                        news_header=title,
+                        news_desc=description,
+                        news_content=content,
+                        news_link=url,
+                        news_date=publishedAt,
+                        news_img=urlToImage,
+                        news_author=author,
+                        news_update=date.today())
+    return

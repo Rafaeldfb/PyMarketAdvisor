@@ -29,7 +29,7 @@ def newsView(symbol):
         userID = session.get("user_id")
         userName = User("SELECT user_name FROM users WHERE user_id = :userID", userID=userID)[0]['user_name']
         # make an object with coin to view
-        coin = coinById(symbol)
+        coin = coinBySymbol(symbol)
         # make an object with news to view
         news = newsBySymbol(symbol)
 

@@ -10,26 +10,26 @@
         <div class="row">
 
             <!-- make a card for each news -->
-            {% for news in news %}
+            {% for item in news %}
                 <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
                     <div class="card shadow bg-light">
                         <div class="card-header">
                             <div class="d-flex flex-row align-content-around">
                                 <img 
                                     class="card-img-top rounded shadow-sm w-25 h-auto me-auto" 
-                                    src="{{ news.urlToImage }}" alt="{{ news.name }}">
+                                    src="{{ item.news_img }}" alt="{{ item.news_header }}">
                                 <h6 class="card-title mb-0 flex-fill m-auto">
-                                    {{ news.title }}
+                                    {{ item.news_header }}
                                     <small><span class="text-muted font-weight-light">
-                                        by: {{ news.author }}
+                                        by: {{ item.news_author }}
                                     </span></small>
                                 </h6>
                             </div>
                         </div>
                         <div class="card-body">
-                            <h6 class="card-title">{{ news.description }}</h6>
-                            <p class="card-text">{{ news.content }}</p>
-                            <a href="{{ news.url }}" class="btn btn-success">View</a>
+                            <h6 class="card-title">{{ item.news_desc }}</h6>
+                            <p class="card-text">{{ item.news_content }}</p>
+                            <a href="{{ item.news_link }}" class="btn btn-success">View</a>
                         </div>
                     </div>
                 </div>
